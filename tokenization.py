@@ -1,8 +1,8 @@
 from util import *
 
 # Add your import statements here
-from nltk.tokenize import TreebankWordTokenizer, PunktParameters
-
+from nltk.tokenize import TreebankWordTokenizer
+from nltk.tokenize.punkt import PunktParameters
 
 
 class Tokenization():
@@ -50,8 +50,9 @@ class Tokenization():
 		tokenizedText = []
 		punkt_params = PunktParameters()
 		punkt_params.abbrev_types = set(['dr', 'vs', 'mr', 'mrs', 'prof', 'inc'])
+		tokenizer=TreebankWordTokenizer(punkt_params)
 
 		for sentence in text:
-			tokenizedText.append(TreebankWordTokenizer(punkt_params).tokenize(sentence))
+			tokenizedText.append(tokenizer.tokenize(sentence))
 
 		return tokenizedText
