@@ -6,7 +6,6 @@ from util import *
 from nltk.stem import WordNetLemmatizer
 
 
-
 class InflectionReduction:
 
 	def reduce(self, text):
@@ -26,17 +25,17 @@ class InflectionReduction:
 			stemmed/lemmatized tokens representing a sentence
 		"""
 
-		reducedText = []
+		reducedText = None
 
-		#Fill in code here
+		# Fill in code here
         lemmatizer=WordNetLemmatizer()
-        
+		
         for sentence in text:
             lemmatized_sentences=[]
             for word in sentence:
                 lemmatized_sentences.append(lemmatizer.lemmatize(word))
             reducedText.append(lemmatized_sentences)
-		
+            
 		return reducedText
 
 
