@@ -1,7 +1,7 @@
 from util import *
 
 # Add your import statements here
-from nltk.tokenize.punkt import PunktSentenceTokenizer
+from nltk.tokenize.punkt import PunktSentenceTokenizer, PunktParameters
 import re
 
 
@@ -50,8 +50,9 @@ class SentenceSegmentation():
 
 		segmentedText = None
 
-		#Fill in code here
-		segmentedText= PunktSentenceTokenizer().tokenize(text)
+		punkt_params = PunktParameters()
+		punkt_params.abbrev_types = set(['dr', 'vs', 'mr', 'mrs', 'prof', 'inc'])
+		segmentedText= PunktSentenceTokenizer(punkt_params).tokenize(text)
 		
 
 		return segmentedText
