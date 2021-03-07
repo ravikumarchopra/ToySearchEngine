@@ -2,7 +2,7 @@ from util import *
 
 # Add your import statements here
 from nltk.tokenize.punkt import PunktSentenceTokenizer
-
+import re
 
 
 class SentenceSegmentation():
@@ -25,7 +25,7 @@ class SentenceSegmentation():
 		segmentedText = None
 
 		#Fill in code here
-		segmentedText=text.split('. ')
+		segmentedText= re.split('\.\s|\?\s|\!\s', text)
 
 		return segmentedText
 

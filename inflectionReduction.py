@@ -25,17 +25,17 @@ class InflectionReduction:
 			stemmed/lemmatized tokens representing a sentence
 		"""
 
-		reducedText = None
+		reducedText=[]
 
-		# Fill in code here
-        lemmatizer=WordNetLemmatizer()
-		
-        for sentence in text:
-            lemmatized_sentences=[]
-            for word in sentence:
+		lemmatizer=WordNetLemmatizer()
+
+		for sentence in text:
+			lemmatized_sentences=[]
+			for word in sentence:
 				# lemmatized_sentences.append(PorterStemmer().stem(word))
-                lemmatized_sentences.append(lemmatizer.lemmatize(word))
-            reducedText.append(lemmatized_sentences)
+				lemmatized_sentences.append(lemmatizer.lemmatize(word))
+			reducedText.append(lemmatized_sentences)
+			
 		return reducedText
 
 
