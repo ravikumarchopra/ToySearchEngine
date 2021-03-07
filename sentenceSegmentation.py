@@ -45,13 +45,13 @@ class SentenceSegmentation():
 		Returns
 		-------
 		list
-			A list of strings where each strin is a single sentence
+			A list of strings where each string is a single sentence
 		"""
 
 		segmentedText = None
 
 		#Fill in code here
-		segmentedText= PunktSentenceTokenizer(text)
+		segmentedText= PunktSentenceTokenizer().tokenize(text)
 		
 
 		return segmentedText

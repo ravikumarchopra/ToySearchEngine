@@ -1,7 +1,7 @@
 from util import *
 
 # Add your import statements here
-# from nltk.stem import PorterStemmer
+from nltk.stem import PorterStemmer
 # from nltk.stem import LancasterStemmer
 from nltk.stem import WordNetLemmatizer
 
@@ -33,9 +33,9 @@ class InflectionReduction:
         for sentence in text:
             lemmatized_sentences=[]
             for word in sentence:
+				# lemmatized_sentences.append(PorterStemmer().stem(word))
                 lemmatized_sentences.append(lemmatizer.lemmatize(word))
             reducedText.append(lemmatized_sentences)
-            
 		return reducedText
 
 
