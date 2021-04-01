@@ -1,6 +1,7 @@
 from util import *
 
 # Add your import statements here
+import math
 
 
 class Evaluation():
@@ -67,7 +68,7 @@ class Evaluation():
 
         precisions = []
         for ret_doc_IDs, query_id in zip(doc_IDs_ordered, query_ids):
-            relevant = [q['id'] for q in qrels if q['query_num'] == query_id]
+            relevant = [int(q['id']) for q in qrels if int(q['query_num']) == query_id]
             precisions.append(self.queryPrecision(
                 ret_doc_IDs, query_id, relevant, k))
 
@@ -100,11 +101,14 @@ class Evaluation():
 
         recall = -1
 
-        retrieved = query_doc_IDs_ordered[:k]
-        relevant = true_doc_IDs
+        try:
+            retrieved = query_doc_IDs_ordered[:k]
+            relevant = true_doc_IDs
 
-        rel_and_ret = list(set(relevant) & set(retrieved))
-        recall = len(rel_and_ret)/len(relevant)
+            rel_and_ret = list(set(relevant) & set(retrieved))
+            recall = len(rel_and_ret)/len(relevant)
+        except:
+            pass
 
         return recall
 
@@ -137,7 +141,7 @@ class Evaluation():
 
         recalls = []
         for ret_doc_IDs, query_id in zip(doc_IDs_ordered, query_ids):
-            relevant = [q['id'] for q in qrels if q['query_num'] == query_id]
+            relevant = [int(q['id']) for q in qrels if int(q['query_num']) == query_id]
             recalls.append(self.queryRecall(
                 ret_doc_IDs, query_id, relevant, k))
 
@@ -173,10 +177,13 @@ class Evaluation():
         retrieved = query_doc_IDs_ordered[:k]
         relevant = true_doc_IDs
 
-        P = self.queryPrecision(retrieved, query_id, relevant, k)
-        R = self.queryRecall(retrieved, query_id, relevant, k)
+        try:
+            P = self.queryPrecision(retrieved, query_id, relevant, k)
+            R = self.queryRecall(retrieved, query_id, relevant, k)
 
-        fscore = 2*P*R/(P+R)
+            fscore = 2*P*R/(P+R)
+        except:
+            pass
 
         return fscore
 
@@ -209,7 +216,7 @@ class Evaluation():
 
         Fscores = []
         for ret_doc_IDs, query_id in zip(doc_IDs_ordered, query_ids):
-            relevant = [q['id'] for q in qrels if q['query_num'] == query_id]
+            relevant = [int(q['id']) for q in qrels if int(q['query_num']) == query_id]
             Fscores.append(self.queryFscore(
                 ret_doc_IDs, query_id, relevant, k))
 
@@ -217,7 +224,7 @@ class Evaluation():
 
         return meanFscore
 
-    def queryNDCG(self, query_doc_IDs_ordered, query_id, true_doc_IDs, k):
+    def queryNDCG(self, query_doc_IDs_ordered, query_id, true_doc_IDs, rel_score, k):
         """
         Computation of nDCG of the Information Retrieval System
         at given value of k for a single query
@@ -242,10 +249,26 @@ class Evaluation():
 
         nDCG = -1
 
-        # retrieved = query_doc_IDs_ordered[:k]
+        retrieved = query_doc_IDs_ordered[:k]
+        relevant = true_doc_IDs
+        rel, ideal_ordering = [], []
+        DCG, IDCG = 0, 0
+        try:
+            for i in range(k):
+                if retrieved[i] in relevant:
+                    rel.append(rel_score[relevant.index(retrieved[i])])
+                else:
+                    rel.append(0)
+                DCG += rel[i]/math.log(i+2, 2)
 
-        # for i in range(k):
-        #     rel = qrels
+            ideal_ordering = rel.copy()
+            ideal_ordering.sort(reverse=True)
+            for i in range(k):
+                IDCG += (ideal_ordering[i]/math.log(i+2, 2))
+
+            nDCG = DCG/IDCG
+        except:
+            pass
 
         return nDCG
 
@@ -275,6 +298,17 @@ class Evaluation():
         """
 
         meanNDCG = -1
+        NDCGs = []
+        for ret_doc_IDs, query_id in zip(doc_IDs_ordered, query_ids):
+            relevant, rel_score = [], []
+            for q in qrels:
+                if int(q['query_num']) == query_id:
+                    rel_score.append(int(5-q['position']))
+                    relevant.append(int(q['id']))
+            NDCGs.append(self.queryNDCG(
+                ret_doc_IDs, query_id, relevant, rel_score, k))
+
+        meanNDCG=sum(NDCGs)/len(NDCGs)
 
         return meanNDCG
 
@@ -302,19 +336,22 @@ class Evaluation():
                 The average precision value as a number between 0 and 1
         """
 
-        avgPrecision = -1
+        avgPrecision=-1
 
-        retrieved = query_doc_IDs_ordered[:k]
-        relevant = true_doc_IDs
-        precisions = []
+        retrieved=query_doc_IDs_ordered[:k]
+        relevant=true_doc_IDs
+        precisions=[]
 
-        rel = 0
-        for i in range(k):
-            if retrieved[i] in relevant:
-                rel += 1
-                precisions.append(rel/i)
+        try:
+            rel=0
+            for i in range(k):
+                if retrieved[i] in relevant:
+                    rel += 1
+                    precisions.append(rel/i)
 
-        avgPrecision = sum(precisions)/len(precisions)
+            avgPrecision=sum(precisions)/len(precisions)
+        except:
+            pass
 
         return avgPrecision
 
@@ -343,14 +380,14 @@ class Evaluation():
                 The MAP value as a number between 0 and 1
         """
 
-        meanAveragePrecision = -1
+        meanAveragePrecision=-1
 
-        averagePrecisions = []
+        averagePrecisions=[]
         for ret_doc_IDs, query_id in zip(doc_IDs_ordered, query_ids):
-            relevant = [q['id'] for q in q_rels if q['query_num'] == query_id]
+            relevant=[int(q['id']) for q in q_rels if int(q['query_num']) == query_id]
             averagePrecisions.append(self.queryAveragePrecision(
                 ret_doc_IDs, query_id, relevant, k))
 
-        meanAveragePrecision = sum(averagePrecisions)/len(averagePrecisions)
+        meanAveragePrecision=sum(averagePrecisions)/len(averagePrecisions)
 
         return meanAveragePrecision
