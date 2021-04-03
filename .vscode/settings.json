@@ -3,10 +3,12 @@
         "Cranfield",
         "DCGs",
         "IDCG",
+        "IDFs",
         "Lemmatization",
         "Lemmatize",
         "NDCG",
         "NDCGs",
+        "asarray",
         "cran",
         "fscore",
         "fscores",
@@ -14,10 +16,12 @@
         "judgements",
         "lemmatized",
         "lemmatizer",
+        "numpy",
         "punkt",
         "pyplot",
         "qrels",
         "rels",
+        "tolist",
         "xlabel"
     ]
 }
