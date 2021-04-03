@@ -37,6 +37,9 @@ class Evaluation():
         rel_and_ret = list(set(relevant) & set(retrieved))
         precision = len(rel_and_ret)/len(retrieved)
 
+        # if precision==0:
+        #     print('query_id: ', query_id ,', Retrieved Docs: ', retrieved,', Relevant Docs: ', relevant)
+
         return precision
 
     def meanPrecision(self, doc_IDs_ordered, query_ids, qrels, k):
@@ -174,7 +177,7 @@ class Evaluation():
 
         fscore = -1
 
-        retrieved = query_doc_IDs_ordered[:k]
+        retrieved = query_doc_IDs_ordered
         relevant = true_doc_IDs
 
         try:
@@ -184,6 +187,7 @@ class Evaluation():
             fscore = 2*P*R/(P+R)
         except:
             pass
+
 
         return fscore
 
@@ -347,7 +351,7 @@ class Evaluation():
             for i in range(k):
                 if retrieved[i] in relevant:
                     rel += 1
-                    precisions.append(rel/i)
+                    precisions.append(rel/(i+1))
 
             avgPrecision=sum(precisions)/len(precisions)
         except:

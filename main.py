@@ -155,6 +155,8 @@ class SearchEngine:
             [item["query"] for item in queries_json]
         # Process queries
         processedQueries = self.preprocessQueries(queries)
+        # query_ids = [1]
+        # processedQueries = [[['Plant', 'eater']]]
 
         # Read documents
         docs_json = json.load(open(args.dataset + "cran_docs.json", 'r'))[:]
@@ -162,6 +164,10 @@ class SearchEngine:
             [item["body"] for item in docs_json]
         # Process documents
         processedDocs = self.preprocessDocs(docs)
+        # doc_ids = [1, 2, 3]
+        # processedDocs = [[['Herbivore', 'typical', 'plant', 'eater', 'meat', 'eater']],
+        #                  [['Carnivore', 'typical', 'meat', 'eater', 'plant', 'eater']],
+        #                  [['Deer', 'eat', 'grass', 'leav']]]
 
         # Build document index
         self.informationRetriever.buildIndex(processedDocs, doc_ids)
