@@ -1,0 +1,45 @@
+Initializing ESA based IR system :
+Unique words in articles  46994
+Building doc index :
+Documents Processed : 100%|██████████████████████████████████| 1400/1400 [00:00<00:00, 4680.32 Documents/s]
+Calculating tf value for documents :
+Documents Processed : 100%|████████████████████████████████████| 1400/1400 [00:48<00:00, 28.98 Documents/s] 
+Calculating IDF value for terms :
+Terms Processed : 100%|████████████████████████████████████████| 6077/6077 [00:00<00:00, 155894.71 Terms/s] 
+[ Document vectors created. ]
+Building article index :
+Articles Processed : 100%|████████████████████████████████████| 8567/8567 [00:03<00:00, 2403.40 Articles/s] 
+Calculating tf value for articles :
+Articles Processed : 100%|██████████████████████████████████████| 8567/8567 [36:09<00:00,  3.95 Articles/s] 
+Calculating IDF value for articles :
+Terms Processed : 100%|██████████████████████████████████████| 46994/46994 [00:00<00:00, 259126.11 Terms/s] 
+[ Article vectors created. ]
+Creating Article-Document Matrix :
+Documents Processed : 100%|██████████████████████████████████| 1400/1400 [2:14:00<00:00,  5.74s/ Documents]
+[ Article-Document Matrix created. ]
+Creating query vectors :
+Queries Processed : 100%|██████████████████████████████████████████| 225/225 [00:03<00:00, 59.83 Queries/s]
+Creating Query-Article Matrix :
+Queries Processed : 100%|██████████████████████████████████████████| 225/225 [21:32<00:00,  5.74s/ Queries] 
+Finding relevent documents for queries :
+ Queries Processed : 100%|█████████████████████████████████████████| 225/225 [00:20<00:00, 11.17 Queries/s]
+Precision, Recall and F-score @ 1 : 0.48, 0.08, 0.13
+MAP, nDCG @ 1 : 0.48, 0.48
+Precision, Recall and F-score @ 2 : 0.41, 0.14, 0.19
+MAP, nDCG @ 2 : 0.44, 0.55
+Precision, Recall and F-score @ 3 : 0.36, 0.18, 0.22
+MAP, nDCG @ 3 : 0.42, 0.58
+Precision, Recall and F-score @ 4 : 0.32, 0.20, 0.23
+MAP, nDCG @ 4 : 0.39, 0.60
+Precision, Recall and F-score @ 5 : 0.29, 0.23, 0.24
+MAP, nDCG @ 5 : 0.37, 0.60
+Precision, Recall and F-score @ 6 : 0.27, 0.25, 0.24
+MAP, nDCG @ 6 : 0.35, 0.60
+Precision, Recall and F-score @ 7 : 0.25, 0.27, 0.24
+MAP, nDCG @ 7 : 0.34, 0.60
+Precision, Recall and F-score @ 8 : 0.23, 0.28, 0.23
+MAP, nDCG @ 8 : 0.33, 0.60
+Precision, Recall and F-score @ 9 : 0.22, 0.29, 0.23
+MAP, nDCG @ 9 : 0.31, 0.61
+Precision, Recall and F-score @ 10 : 0.21, 0.31, 0.23
+MAP, nDCG @ 10 : 0.30, 0.60

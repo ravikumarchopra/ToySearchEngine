@@ -1,0 +1,51 @@
+D:\IITM\NLP_CS6770\Assignments\ToySearchEngine> d: && cd d:\IITM\NLP_CS6770\Assignments\ToySearchEngine && cmd /C "C:\Users\hp\AppData\Local\Microsoft\WindowsApps\PythonSoftwareFoundation.Python.3.9_qbz5n2kfra8p0\python.exe c:\Users\hp\.vscode\extensions\ms-python.python-2021.5.842923320\pythonFiles\lib\python\debugpy\launcher 55990 -- d:\IITM\NLP_CS6770\Assignments\ToySearchEngine\main.py "
+Initializing Vector Space based IR system ...
+Building doc index :
+Documents Processed : 100%|██████████████████████████████████| 1400/1400 [00:00<00:00, 4543.89 Documents/s] 
+Calculating tf values for documents :
+Documents Processed : 100%|████████████████████████████████████| 1400/1400 [00:44<00:00, 31.66 Documents/s] 
+Calculating IDF values for terms :
+Terms Processed : 100%|████████████████████████████████████████| 6077/6077 [00:00<00:00, 217027.42 Terms/s] 
+[ Document vectors created. ]
+Creating query vectors :
+Queries Processed : 100%|██████████████████████████████████████████| 225/225 [00:15<00:00, 14.53 Queries/s] 
+Precision, Recall and F-score @ 1 : 0.66, 0.11, 0.18
+Traceback (most recent call last):
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.1520.0_x64__qbz5n2kfra8p0\lib\runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.9_3.9.1520.0_x64__qbz5n2kfra8p0\lib\runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "c:\Users\hp\.vscode\extensions\ms-python.python-2021.5.842923320\pythonFiles\lib\python\debugpy\__main__.py", line 45, in <module>
+    cli.main()
+  File "c:\Users\hp\.vscode\extensions\ms-python.python-2021.5.842923320\pythonFiles\lib\python\debugpy/..\debugpy\server\cli.py", line 444, in main
+    run()
+Initializing Vector Space based IR system ...
+Building doc index :
+Documents Processed : 100%|██████████████████████████████████| 1400/1400 [00:00<00:00, 4483.39 Documents/s] 
+Calculating tf values for documents :
+Documents Processed : 100%|████████████████████████████████████| 1400/1400 [00:43<00:00, 31.93 Documents/s] 
+Calculating IDF values for terms :
+Terms Processed : 100%|████████████████████████████████████████| 6077/6077 [00:00<00:00, 217082.87 Terms/s] 
+[ Document vectors created. ]
+Creating query vectors :
+Queries Processed : 100%|██████████████████████████████████████████| 225/225 [00:15<00:00, 14.68 Queries/s] 
+Precision, Recall and F-score @ 1 : 0.66, 0.11, 0.18
+MAP, nDCG @ 1 : 0.66, 0.66
+Precision, Recall and F-score @ 2 : 0.57, 0.19, 0.27
+MAP, nDCG @ 2 : 0.61, 0.71
+Precision, Recall and F-score @ 3 : 0.51, 0.25, 0.31
+MAP, nDCG @ 3 : 0.58, 0.73
+Precision, Recall and F-score @ 4 : 0.45, 0.28, 0.32
+MAP, nDCG @ 4 : 0.54, 0.73
+Precision, Recall and F-score @ 5 : 0.40, 0.31, 0.32
+MAP, nDCG @ 5 : 0.52, 0.73
+Precision, Recall and F-score @ 6 : 0.38, 0.34, 0.33
+MAP, nDCG @ 6 : 0.49, 0.74
+Precision, Recall and F-score @ 7 : 0.35, 0.36, 0.33
+MAP, nDCG @ 7 : 0.47, 0.74
+Precision, Recall and F-score @ 8 : 0.33, 0.38, 0.33
+MAP, nDCG @ 8 : 0.46, 0.74
+Precision, Recall and F-score @ 9 : 0.31, 0.40, 0.33
+MAP, nDCG @ 9 : 0.44, 0.73
+Precision, Recall and F-score @ 10 : 0.29, 0.42, 0.32
+MAP, nDCG @ 10 : 0.42, 0.73
