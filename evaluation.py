@@ -265,16 +265,16 @@ class Evaluation():
                     rel.append(rel_score[relevant.index(retrieved[i])])
                 else:
                     rel.append(0)
-                DCG += rel[i]/math.log(i+2)
+                DCG += rel[i]/math.log2(i+2)
 
             ideal_ordering = rel.copy()
             ideal_ordering.sort(reverse=True)
             for i in range(k):
-                IDCG += (ideal_ordering[i]/math.log(i+2))
+                IDCG += (ideal_ordering[i]/math.log2(i+2))
 
             nDCG = DCG/IDCG
         except:
-            pass
+            nDCG = 0
 
         return nDCG
 
@@ -344,20 +344,24 @@ class Evaluation():
 
         avgPrecision = -1
 
-        retrieved = query_doc_IDs_ordered[:k]
-        relevant = true_doc_IDs
+        # retrieved = query_doc_IDs_ordered[:k]
+        # relevant = true_doc_IDs
         precisions = []
 
-        try:
-            rel = 0
-            for i in range(k):
-                if retrieved[i] in relevant:
-                    rel += 1
-                    precisions.append(rel/(i+1))
+        # try:
+        #     rel = 0
+        #     for i in range(k):
+        #         if retrieved[i] in relevant:
+        #             rel += 1
+        #             precisions.append(rel/(i+1))
 
-            avgPrecision = sum(precisions)/len(precisions)
-        except:
-            pass
+        #     avgPrecision = sum(precisions)/len(precisions)
+        # except:
+        #     pass
+        for i in range(1, k+1):
+            precisions.append(self.queryPrecision(query_doc_IDs_ordered, query_id, true_doc_IDs, i))
+
+        avgPrecision = sum(precisions)/len(precisions)
 
         return avgPrecision
 

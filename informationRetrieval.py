@@ -1,7 +1,7 @@
 from util import *
 
 # Add your import statements here
-from collections import Counter
+from tqdm import tqdm
 import math
 import numpy as np
 
@@ -12,6 +12,7 @@ class InformationRetrieval():
         self.index = None
         self.IDF = None
         self.docVectors = None
+        print('Initializing Vector Space based IR system ...')
 
     def buildIndex(self, docs, docIDs):
         """
@@ -31,8 +32,9 @@ class InformationRetrieval():
         """
 
         index = {}
-
-        for doc, docID in zip(docs, docIDs):
+        print('Building doc index :')
+        # Building doc index
+        for doc, docID in tqdm(zip(docs, docIDs), total=len(docIDs), unit=' Documents', desc='Documents Processed : '):
             for sentence in doc:
                 for word in sentence:
                     if word not in ['.' , ',', '?', '!']:
@@ -48,13 +50,17 @@ class InformationRetrieval():
 
         D = len(docs)
         tfs, IDF = [], []
-        for doc in docs:
+        print('Calculating tf values for documents :')
+        # Calculating tf values for documents
+        for doc in tqdm(docs, total=D, unit=' Documents', desc='Documents Processed : '):
             tf = []
             for term in terms:
                 tf.append(sum([sentence.count(term) for sentence in doc]))
             tfs.append(tf)
 
-        for term in terms:
+        print('Calculating IDF values for terms :')
+        # Calculating IDF values for terms
+        for term in tqdm(terms, total=len(terms), unit=' Terms', desc='Terms Processed : '):
             idf = math.log(D/len(self.index[term]))
             IDF.append(idf)
 
@@ -62,6 +68,7 @@ class InformationRetrieval():
 
         self.IDF = np.asarray(IDF)
         self.docVectors = np.multiply(tfs, self.IDF)
+        print('[ Document vectors created. ]')
 
     def rank(self, queries):
         """
@@ -85,14 +92,17 @@ class InformationRetrieval():
 
         terms = [*self.index]
 
-        for query in queries:
+        print('Creating query vectors :')
+        # Creating query vectors
+        for query in tqdm(queries, total=len(queries), unit=' Queries', desc='Queries Processed : '):
             sim_docs = {}
             tf = []
             for term in terms:
                 tf.append(sum([sentence.count(term) for sentence in query]))
             tfVector = np.asarray(tf)
             queryVector = np.multiply(tfVector, self.IDF)
-
+            
+            # Finding Similar documents for queries
             for docID, docVector in zip(range(1, len(self.docVectors)+1), self.docVectors):
                 try:
                     dot = np.dot(queryVector, docVector)
@@ -107,16 +117,5 @@ class InformationRetrieval():
                     pass
 
             doc_IDs_ordered_all.append(sorted(sim_docs, key=sim_docs.get, reverse=True))
-
-        
-        # for query in queries:
-        # 	docList = []
-        # 	for sentence in query:
-        # 		for word in sentence:
-        # 			if word in self.index:
-        # 				docList.extend(self.index[word])
-
-        # 	doc_IDs_ordered_all.append(
-        # 	    [key for key, value in Counter(docList).most_common()])
 
         return doc_IDs_ordered_all

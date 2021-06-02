@@ -3,6 +3,8 @@ from tokenization import Tokenization
 from inflectionReduction import InflectionReduction
 from stopwordRemoval import StopwordRemoval
 from informationRetrieval import InformationRetrieval
+from ESA import ESA
+from LSA import LSA
 from evaluation import Evaluation
 
 from sys import version_info
@@ -31,8 +33,15 @@ class SearchEngine:
         self.sentenceSegmenter = SentenceSegmentation()
         self.inflectionReducer = InflectionReduction()
         self.stopwordRemover = StopwordRemoval()
+        self.model = args.model.upper()
 
-        self.informationRetriever = InformationRetrieval()
+        if self.model == 'LSA':
+            self.informationRetriever = LSA()
+        elif self.model == 'ESA':
+            self.informationRetriever = ESA()
+        else:
+            self.informationRetriever = InformationRetrieval()
+
         self.evaluator = Evaluation()
 
     def segmentSentences(self, text):
@@ -139,6 +148,74 @@ class SearchEngine:
         preprocessedDocs = stopwordRemovedDocs
         return preprocessedDocs
 
+    def preprocessTitles(self, titles):
+        """
+        Preprocess the titles of documents
+        """
+
+        # Segmentation
+        segmentedTitles = []
+        for title in titles:
+            segmentedTitle = self.segmentSentences(title)
+            segmentedTitles.append(segmentedTitle)
+        # Tokenization
+        tokenizedTitles = []
+        for title in segmentedTitles:
+            tokenizedTitle = self.tokenize(title)
+            tokenizedTitles.append(tokenizedTitle)
+        # Reduction
+        reducedTitles = []
+        for title in tokenizedTitles:
+            reducedTitle = self.reduceInflection(title)
+            reducedTitles.append(reducedTitle)
+        # Stopword removal
+        stopwordRemovedTitles = []
+        for title in reducedTitles:
+            stopwordRemovedTitle = self.removeStopwords(title)
+            stopwordRemovedTitles.append(stopwordRemovedTitle)
+        json.dump(stopwordRemovedTitles, open(
+            self.args.out_folder + "stopword_removed_titles.txt", 'w'))
+
+        preprocessedTitles = stopwordRemovedTitles
+        return preprocessedTitles
+
+
+    def preprocessArticles(self, articles):
+        """
+        Preprocess the titles of documents
+        """
+        segmentedArticles = []
+        for article in articles:
+            segmentedArticle = self.segmentSentences(article)
+            segmentedArticles.append(segmentedArticle)
+
+        tokenizedArticles = []
+        for article in segmentedArticles:
+            tokenizedArticle = self.tokenize(article)
+            tokenizedArticles.append(tokenizedArticle)
+
+        reducedArticles = []
+        for article in tokenizedArticles:
+            reducedArticle = self.reduceInflection(article)
+            reducedArticles.append(reducedArticle)
+
+        stopwordRemovedArticles = []
+        for article in reducedArticles:
+            stopwordRemovedArticle = self.removeStopwords(article)
+            stopwordRemovedArticles.append(stopwordRemovedArticle)
+        json.dump(stopwordRemovedArticles, open(
+            self.args.out_folder + "processed_articles.txt", 'w'))
+
+        preprocessedArticles = stopwordRemovedArticles
+        s = set()
+        for x in preprocessedArticles:
+            for y in x:
+                for z in y:
+                    s.add(z)
+        print("Unique words in articles ", len(s))
+        return preprocessedArticles
+
+
     def evaluateDataset(self):
         """
         - preprocesses the queries and documents, stores in output folder
@@ -158,13 +235,22 @@ class SearchEngine:
 
         # Read documents
         docs_json = json.load(open(args.dataset + "cran_docs.json", 'r'))[:]
-        doc_ids, docs = [item["id"] for item in docs_json], \
-            [item["body"] for item in docs_json]
+        doc_ids, docs, titles = [item["id"] for item in docs_json], \
+                                [item["body"] for item in docs_json],\
+                                [item["title"] for item in docs_json]
         # Process documents
         processedDocs = self.preprocessDocs(docs)
 
         # Build document index
-        self.informationRetriever.buildIndex(processedDocs, doc_ids)
+        if self.model == 'ESA':
+            articles_json = json.load(open("wikipedia/articles.json", 'r'))[:]
+            article_ids, articles = [item["id"] for item in articles_json], \
+                                    [item["body"] for item in articles_json]
+            processedArticles = self.preprocessArticles(articles)
+            self.informationRetriever.buildIndex(processedDocs, doc_ids, processedArticles, article_ids)
+        else:
+            self.informationRetriever.buildIndex(processedDocs, doc_ids)
+
         # Rank the documents for each query
         doc_IDs_ordered = self.informationRetriever.rank(processedQueries)
 
@@ -183,17 +269,17 @@ class SearchEngine:
             fscore = self.evaluator.meanFscore(
                 doc_IDs_ordered, query_ids, qrels, k)
             fscores.append(fscore)
-            print("Precision, Recall and F-score @ " +
-                  str(k) + " : " + str(precision) + ", " + str(recall) +
-                  ", " + str(fscore))
+            print("Precision, Recall and F-score @ %d : %.2f, %.2f, %.2f" % (k, precision, recall, fscore))
+                #   str(k) + " : " + str(precision) + ", " + str(recall) +
+                #   ", " + str(fscore))
             MAP = self.evaluator.meanAveragePrecision(
                 doc_IDs_ordered, query_ids, qrels, k)
             MAPs.append(MAP)
             nDCG = self.evaluator.meanNDCG(
                 doc_IDs_ordered, query_ids, qrels, k)
             nDCGs.append(nDCG)
-            print("MAP, nDCG @ " +
-                  str(k) + " : " + str(MAP) + ", " + str(nDCG))
+            print("MAP, nDCG @ %d : %.2f, %.2f" % (k, MAP, nDCG)) 
+                #   str(k) + " : " + str(MAP) + ", " + str(nDCG))
 
         # Plot the metrics and save plot
         plt.plot(range(1, 11), precisions, label="Precision")
@@ -251,6 +337,7 @@ if __name__ == "__main__":
                         help="Tokenizer Type [naive|ptb]")
     parser.add_argument('-custom', action="store_true",
                         help="Take custom query as input")
+    parser.add_argument('-model', default='VSM', help="Takes model name [VSM|LSA|ESA]")
 
     # Parse the input arguments
     args = parser.parse_args()
