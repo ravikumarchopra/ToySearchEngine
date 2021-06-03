@@ -42,7 +42,8 @@ class StopwordRemoval():
 
     def processSentence(self, sentence):
         sentence = ' '.join(sentence)
-        sentence = sentence.lower()
+        sentence = sentence.lower().encode('ascii', 'ignore').decode()
+        sentence = sentence.replace("\\", "")
         sentence = sentence.replace("/", " ")
         sentence = sentence.replace("-", " ")
         sentence = sentence.replace(".", " ")
