@@ -12,8 +12,23 @@ We are using the same template initially provided for the Assignments for this p
 
 The articles we fetched from wikipedia are stored in a file named `articles.json` inside the folder named `wikipedia`.
 
+## Modules/Packages Used
+
+* `numpy` :  Used for mathematical operations such as matrix multiplication, dot product of vectors for computing cosine similarity and SVD etc.
+
+* `wikipedia` : Used for fetching wikipedia articles for words in document title and body.
+
+* `json` : Used for reading and writing documents in json format.
+
+* `matplotlib` : Used for plotting the performance measure values i.e. *Precision*, *Recall*, *F-Score*, *MAP* and *nDCG*.
+
+* `tqdm` : Used for showing the progress and time it took while executing.
+
 ## To execute and verify the code please follow the following steps:
 
+* Check that all the requirements with their specific versions in the `requirements.txt` file are satisfied.
+* Download and unzip the code folder.
+* Open the folder in cmd.
 * You can run the project by executing the file named `main.py`.
 * Pass the name (e.g. `VSM|LSA|ESA`) of the model you want to use in argument `-model`.
 * You can see the value for *Precision*, *Recall*, *MAP* and *nDCG* in the output.

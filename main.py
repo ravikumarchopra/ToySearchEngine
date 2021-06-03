@@ -242,15 +242,17 @@ class SearchEngine:
         processedDocs = self.preprocessDocs(docs)
 
         # Build document index
-        if self.model == 'ESA':
-            articles_json = json.load(open("wikipedia/articles.json", 'r'))[:]
-            article_ids, articles = [item["id"] for item in articles_json], \
-                                    [item["body"] for item in articles_json]
-            processedArticles = self.preprocessArticles(articles)
-            self.informationRetriever.buildIndex(processedDocs, doc_ids, processedArticles, article_ids)
-        else:
-            self.informationRetriever.buildIndex(processedDocs, doc_ids)
+        # if self.model == 'ESA':
+        #     articles_json = json.load(open("wikipedia/articles.json", 'r'))[:]
+        #     article_ids, articles = [item["id"] for item in articles_json], \
+        #                             [item["body"] for item in articles_json]
+        #     processedArticles = self.preprocessArticles(articles)
+        #     self.informationRetriever.buildIndex(processedDocs, doc_ids, processedArticles, article_ids)
 
+        # else:
+        #     self.informationRetriever.buildIndex(processedDocs, doc_ids)
+
+        self.informationRetriever.buildIndex(processedDocs, doc_ids)
         # Rank the documents for each query
         doc_IDs_ordered = self.informationRetriever.rank(processedQueries)
 
@@ -337,7 +339,7 @@ if __name__ == "__main__":
                         help="Tokenizer Type [naive|ptb]")
     parser.add_argument('-custom', action="store_true",
                         help="Take custom query as input")
-    parser.add_argument('-model', default='VSM', help="Takes model name [VSM|LSA|ESA]")
+    parser.add_argument('-model', default='ESA', help="Takes model name [VSM|LSA|ESA]")
 
     # Parse the input arguments
     args = parser.parse_args()

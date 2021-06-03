@@ -10,6 +10,7 @@
         "NDCGs",
         "asarray",
         "cran",
+        "eval",
         "fscore",
         "fscores",
         "judements",
@@ -17,12 +18,14 @@
         "leav",
         "lemmatized",
         "lemmatizer",
+        "matplotlib",
         "numpy",
         "punkt",
         "pyplot",
         "qrels",
         "rels",
         "tolist",
+        "tqdm",
         "xlabel"
     ]
 }

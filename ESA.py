@@ -1,6 +1,7 @@
 from util import *
 # Add your import statements here
 import numpy as np
+import time
 from tqdm import tqdm
 
 class ESA():
@@ -111,6 +112,8 @@ class ESA():
         self.articleVectors = np.multiply(a_tfs, a_IDF)
         print('[ Article vectors created. ]')
 
+        np.save('articleVectors.npy', self.articleVectors)
+
         print('Creating Article-Document Matrix :')
         # Computing article document matrix
         doc_art_matrix = []
@@ -128,6 +131,90 @@ class ESA():
         self.doc_art_matrix = doc_art_matrix
         print('[ Article-Document Matrix created. ]')
 
+    def buildIndex(self, docs, docIDs):
+        """
+        Builds the document index in terms of the document
+        IDs and stores it in the 'index' class variable
+
+        Parameters
+        ----------
+        arg1 : list
+                A list of lists of lists where each sub-list is
+                a document and each sub-sub-list is a sentence of the document
+        arg2 : list
+                A list of integers denoting IDs of the documents
+
+        Returns
+        -------
+        None
+        """
+
+        index = {}
+        article_index = {}
+
+        print('Building doc index :')
+        # building inverted index for documents
+        for doc, docID in tqdm(zip(docs, docIDs), total=len(docIDs), unit=' Documents', desc='Documents Processed : '):
+            for sentence in doc:
+                for word in sentence:
+                    if word not in ['.' , ',', '?', '!']:
+                        if word in index:
+                            if docID not in index[word]:
+                                index[word].append(docID)
+                        else:
+                            index[word] = [docID]
+
+        self.index = index
+
+        terms = [*self.index]
+
+        D = len(docs)
+        tfs, IDF = [], []
+
+        print('Calculating tf value for documents :')
+        # calculating tf values for each document
+        for doc in tqdm(docs, total=D, unit=' Documents', desc='Documents Processed : '):
+            tf = []
+            for term in terms:
+                tf.append(sum([sentence.count(term) for sentence in doc]))
+            tfs.append(tf)
+
+        print('Calculating IDF value for terms :')
+        # calculating IDF values for each term
+        for term in tqdm(terms, total=len(terms), unit=' Terms', desc='Terms Processed : '):
+            idf = np.log(D/len(self.index[term]))
+            IDF.append(idf)
+
+        tfs = np.asarray(tfs)
+        self.IDF = np.asarray(IDF)
+        # calculating tf-IDF matrix for documents
+        self.docVectors = np.multiply(tfs, self.IDF)
+        print('[ Document vectors created. ]')    
+
+        t = time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime())
+        print(t,' Loading tf-IDF values for articles ...')
+        # Loading tf-IDF values for articles        
+        self.articleVectors = np.load('articleVectors.npy')
+        
+        t = time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime())
+        print(t, ' [ Article vectors loaded. ]')
+
+        print('Creating Article-Document Matrix :')
+        # Computing article document matrix
+        doc_art_matrix = []
+        for docID in tqdm(docIDs, total=D, unit=' Documents', desc='Documents Processed : '):
+            doc_art_vec = []
+            for i, term in enumerate(terms):
+                try:
+                    pos = self.article_terms.index(term)
+                    wt_vec = self.articleVectors[:, pos]
+                except:
+                    wt_vec = np.zeros(self.articleVectors.shape[0]).T
+
+                doc_art_vec.append(self.docVectors[docID-1][i]*wt_vec)
+            doc_art_matrix.append(sum(doc_art_vec))
+        self.doc_art_matrix = doc_art_matrix
+        print('[ Article-Document Matrix created. ]')
 
 
     def rank(self, queries):

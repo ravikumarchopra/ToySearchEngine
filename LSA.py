@@ -5,7 +5,6 @@ from util import *
 # Add your import statements here
 from tqdm import tqdm
 import time
-from scipy.linalg import svd
 import numpy as np
 
 
@@ -78,7 +77,7 @@ class LSA():
         t = time.strftime("%m/%d/%Y, %H:%M:%S", time.localtime())
         print(t,' Performing SVD ...')
         # Performing SVD
-        k = 901 #np.linalg.matrix_rank(self.term_document_matrix)
+        k = 505 #np.linalg.matrix_rank(self.term_document_matrix)
         U, S, V = np.linalg.svd(self.term_document_matrix, full_matrices=True)
         U_k, S_k, V_k = U[:, :k], np.diag(S[:k]), V[:k]
         self.term_document_matrix_reduced = np.dot(U_k, np.dot(S_k, V_k))
