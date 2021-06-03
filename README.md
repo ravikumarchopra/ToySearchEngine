@@ -28,7 +28,7 @@ The articles we fetched from wikipedia are stored in a file named `articles.json
 
 * Check that all the requirements with their specific versions in the `requirements.txt` file are satisfied.
 * Download and unzip the code folder.
-* Open the folder in cmd.
+* Open cmd in the folder.
 * You can run the project by executing the file named `main.py`.
 * Pass the name (e.g. `VSM|LSA|ESA`) of the model you want to use in argument `-model`.
 * You can see the value for *Precision*, *Recall*, *MAP* and *nDCG* in the output.
